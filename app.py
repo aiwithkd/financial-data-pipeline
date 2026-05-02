@@ -19,7 +19,7 @@ from src import database as db
 from src.orchestration.config_loader import load_config
 from src.orchestration.pipeline import run_pipeline, run_all_pipelines
 
-# ── Init ───────────────────────────────────────────────────────────────────────
+# Init
 db.init_db()
 
 st.set_page_config(
@@ -38,7 +38,7 @@ div[data-testid="column"] { padding: 0 0.3rem; }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar ────────────────────────────────────────────────────────────────────
+# Sidebar
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/data-transfer.png", width=52)
     st.title("Data Pipeline")
@@ -83,12 +83,12 @@ with st.sidebar:
         st.rerun()
 
 
-# ── Main ───────────────────────────────────────────────────────────────────────
+# Main
 st.title("🔁 Financial Data Pipeline Monitor")
 st.caption("End-to-end pipeline: ingest → validate → transform → load. Track quality scores, run history, and data health in real time.")
 st.divider()
 
-# ── Summary KPIs ───────────────────────────────────────────────────────────────
+# Summary KPIs
 runs = db.fetch_runs(limit=200)
 checks = db.fetch_checks(limit=1000)
 
@@ -114,7 +114,7 @@ if total_runs == 0:
     st.info("No pipeline runs yet. Click **▶ Run Now** in the sidebar to start the pipeline.")
     st.stop()
 
-# ── Quality Score by Dataset ───────────────────────────────────────────────────
+# Quality score by dataset
 chart_col, gauge_col = st.columns([3, 2], gap="large")
 
 with chart_col:
@@ -179,7 +179,7 @@ with gauge_col:
 
 st.divider()
 
-# ── Per-Dataset Quality ────────────────────────────────────────────────────────
+# Per-dataset quality breakdown
 st.subheader("Quality Checks by Dataset")
 
 checks_df = pd.DataFrame(checks) if checks else pd.DataFrame()
@@ -229,7 +229,7 @@ if not checks_df.empty:
 
 st.divider()
 
-# ── Detail Tabs ────────────────────────────────────────────────────────────────
+# Detail tabs
 tab_runs, tab_checks, tab_failed, tab_explore = st.tabs([
     f"📋 Run History ({total_runs})",
     f"✅ All Quality Checks ({total_checks})",
