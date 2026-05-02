@@ -1,0 +1,202 @@
+datasets:
+  prices:
+    display_name: "Market Prices"
+    raw_file: "data/raw/prices.csv"
+    rules:
+      - name: "Schema Validation"
+        check_type: schema_check
+        column: "_schema"
+        severity: HIGH
+        params:
+          required_columns: [isin, close_price, bid_price, ask_price, volume, price_date, price_currency]
+
+      - name: "Minimum Row Count"
+        check_type: row_count_check
+        column: "_rows"
+        severity: HIGH
+        params:
+          min_rows: 10
+
+      - name: "ISIN Null Check"
+        check_type: null_check
+        column: isin
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "Close Price Null Check"
+        check_type: null_check
+        column: close_price
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "Volume Null Check"
+        check_type: null_check
+        column: volume
+        severity: MEDIUM
+        params:
+          max_null_pct: 5
+
+      - name: "Close Price Range"
+        check_type: range_check
+        column: close_price
+        severity: HIGH
+        params:
+          min: 0.0001
+          max: 100000
+
+      - name: "Volume Range"
+        check_type: range_check
+        column: volume
+        severity: MEDIUM
+        params:
+          min: 0
+
+      - name: "Bid-Ask Spread Valid"
+        check_type: cross_field_check
+        column: bid_price
+        severity: HIGH
+        params:
+          expression: "bid_price < ask_price"
+
+      - name: "Currency Allowed Values"
+        check_type: allowed_values
+        column: price_currency
+        severity: MEDIUM
+        params:
+          values: [USD, GBP, EUR, JPY, CHF, CAD, AUD]
+
+      - name: "ISIN Duplicate Check"
+        check_type: duplicate_check
+        column: isin
+        severity: HIGH
+        params:
+          columns: [isin, price_date]
+
+  positions:
+    display_name: "Portfolio Positions"
+    raw_file: "data/raw/positions.csv"
+    rules:
+      - name: "Schema Validation"
+        check_type: schema_check
+        column: "_schema"
+        severity: HIGH
+        params:
+          required_columns: [account_id, security_id, quantity, price, market_value, currency]
+
+      - name: "Minimum Row Count"
+        check_type: row_count_check
+        column: "_rows"
+        severity: HIGH
+        params:
+          min_rows: 10
+
+      - name: "Account ID Null Check"
+        check_type: null_check
+        column: account_id
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "Security ID Null Check"
+        check_type: null_check
+        column: security_id
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "Quantity Range"
+        check_type: range_check
+        column: quantity
+        severity: HIGH
+        params:
+          min: 0.0001
+
+      - name: "Price Range"
+        check_type: range_check
+        column: price
+        severity: HIGH
+        params:
+          min: 0.0001
+
+      - name: "Market Value Range"
+        check_type: range_check
+        column: market_value
+        severity: HIGH
+        params:
+          min: 0.0001
+
+      - name: "Currency Allowed Values"
+        check_type: allowed_values
+        column: currency
+        severity: MEDIUM
+        params:
+          values: [USD, GBP, EUR, JPY, CHF, CAD, AUD]
+
+      - name: "Position Duplicate Check"
+        check_type: duplicate_check
+        column: account_id
+        severity: HIGH
+        params:
+          columns: [account_id, security_id, price_date]
+
+  transactions:
+    display_name: "Transactions"
+    raw_file: "data/raw/transactions.csv"
+    rules:
+      - name: "Schema Validation"
+        check_type: schema_check
+        column: "_schema"
+        severity: HIGH
+        params:
+          required_columns: [account_id, isin, transaction_type, trade_date, quantity, trade_price, net_amount]
+
+      - name: "Minimum Row Count"
+        check_type: row_count_check
+        column: "_rows"
+        severity: HIGH
+        params:
+          min_rows: 10
+
+      - name: "Account ID Null Check"
+        check_type: null_check
+        column: account_id
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "ISIN Null Check"
+        check_type: null_check
+        column: isin
+        severity: HIGH
+        params:
+          max_null_pct: 0
+
+      - name: "Transaction Type Allowed Values"
+        check_type: allowed_values
+        column: transaction_type
+        severity: HIGH
+        params:
+          values: [BUY, SELL]
+
+      - name: "Quantity Range"
+        check_type: range_check
+        column: quantity
+        severity: HIGH
+        params:
+          min: 0.0001
+
+      - name: "Trade Price Range"
+        check_type: range_check
+        column: trade_price
+        severity: HIGH
+        params:
+          min: 0.0001
+
+      - name: "Net Amount Range"
+        check_type: range_check
+        column: net_amount
+        severity: HIGH
+        params:
+          min: 0.0001
